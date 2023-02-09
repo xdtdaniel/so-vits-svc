@@ -79,7 +79,12 @@ def process(filename):
         devive = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         wav, _ = librosa.load(filename, sr=16000)
         wav = torch.from_numpy(wav).unsqueeze(0).to(devive)
-        c = utils.get_hubert_content(hmodel, wav)
+        try:
+            c = utils.get_hubert_content(hmodel, wav)
+        except:
+            os.remove(filename)
+            print(filename)
+            return
         torch.save(c.cpu(), save_name)
     else:
         c = torch.load(save_name)
@@ -101,6 +106,6 @@ if __name__ == "__main__":
 
     filenames = glob(f'{args.in_dir}/*/*.wav', recursive=True)#[:10]
     
-    for filename in tqdm(filenames):
+    for filename in filenames:
         process(filename)
     
