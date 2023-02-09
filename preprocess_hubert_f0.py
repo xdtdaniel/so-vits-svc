@@ -73,7 +73,6 @@ def compute_f0(path, c_len):
 
 
 def process(filename):
-    print(filename)
     save_name = filename+".soft.pt"
     if not os.path.exists(save_name):
         devive = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -83,7 +82,7 @@ def process(filename):
             c = utils.get_hubert_content(hmodel, wav)
         except:
             os.remove(filename)
-            print(filename)
+            print('Error: ' + filename)
             return
         torch.save(c.cpu(), save_name)
     else:
